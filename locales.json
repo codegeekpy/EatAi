@@ -1,0 +1,17 @@
+{
+    "welcome": {
+        "en": "Welcome",
+        "te": "స్వాగతం",
+        "hi": "स्वागत हे"
+    },
+    "upload_title": {
+        "en": "Share Your Recipe",
+        "te": "మీ రెసిపీని భాగస్వామ్యం చేయండి",
+        "hi": "अपना व्यंजन साझा करें"
+    },
+    "cuisines": {
+        "en": {"Andhra": "Andhra", "Telangana": "Telangana"},
+        "te": {"Andhra": "ఆంధ్ర", "Telangana": "తెలంగాణ"},
+        "hi": {"Andhra": "आंध्र", "Telangana": "तेलंगाना"}
+    }
+}
