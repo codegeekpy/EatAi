@@ -23,3 +23,6 @@ venv.bak/
 Thumbs.dbfirebase-key.json
 .env
 secrets.toml
+firebase-key.json
+.env
+.streamlit/secrets.toml
