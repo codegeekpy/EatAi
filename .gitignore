@@ -20,4 +20,6 @@ venv.bak/
 
 # OS files
 .DS_Store
-Thumbs.db
+Thumbs.dbfirebase-key.json
+.env
+secrets.toml
