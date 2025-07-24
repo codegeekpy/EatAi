@@ -1,23 +1,35 @@
-# .github/workflows/deploy.yml
 name: Deploy with Firebase
 
-on: [push]  # Runs on every push
+on:
+  push:
+    branches: [ main ]  # Runs on push to main branch
+  workflow_dispatch:    # Allows manual triggering
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4  # Checkout your code
-      
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js (required for Firebase CLI)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Firebase CLI
+        run: npm install -g firebase-tools
+
       - name: Set up Firebase Key
         run: |
-          # Create the key file from secrets
           echo '${{ secrets.FIREBASE_KEY }}' > firebase-key.json
-          
-          # Verify it was created (debug only)
+          # Debug (optional)
           ls -la firebase-key.json
-          head -n 2 firebase-key.json  # Shows first 2 lines (confirms format)
+          head -n 2 firebase-key.json
 
       - name: Run Python Script
+        run: python app.py
+
+      - name: Deploy to Firebase
         run: |
-          python app.py
+          firebase use --token "${{ secrets.FIREBASE_TOKEN }}"
+          firebase deploy --only hosting --token "${{ secrets.FIREBASE_TOKEN }}"
