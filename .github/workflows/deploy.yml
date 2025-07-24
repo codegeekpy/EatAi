@@ -2,8 +2,8 @@ name: Deploy with Firebase
 
 on:
   push:
-    branches: [ main ]  # Runs on push to main branch
-  workflow_dispatch:    # Allows manual triggering
+    branches: [ main ]
+  workflow_dispatch:
 
 jobs:
   deploy:
@@ -11,7 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Node.js (required for Firebase CLI)
+      - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
@@ -21,23 +21,33 @@ jobs:
 
       - name: Set up Firebase Key
         run: |
-          echo '${{ secrets.FIREBASE_KEY }}' > firebase-key.json
-          # Debug (optional)
-          ls -la firebase-key.json
-          head -n 2 firebase-key.json
-      
+          # Create directory for credentials
+          mkdir -p ~/.config/firebase
+          
+          # Write key with proper JSON formatting
+          echo '${{ secrets.FIREBASE_KEY }}' > ~/.config/firebase/key.json
+          
+          # Set environment variable
+          echo "GOOGLE_APPLICATION_CREDENTIALS=~/.config/firebase/key.json" >> $GITHUB_ENV
+          
+          # Verify
+          ls -la ~/.config/firebase/
+          head -n 3 ~/.config/firebase/key.json
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      - name: Install all dependencies
+      - name: Install dependencies
         run: |
           pip install -r requirements.txt
 
-
       - name: Run Python Script
-        run: python app.py
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ~/.config/firebase/key.json
+        run: |
+          python app.py
 
       - name: Deploy to Firebase
         run: |
