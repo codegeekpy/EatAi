@@ -1,0 +1,23 @@
+# .github/workflows/deploy.yml
+name: Deploy with Firebase
+
+on: [push]  # Runs on every push
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4  # Checkout your code
+      
+      - name: Set up Firebase Key
+        run: |
+          # Create the key file from secrets
+          echo '${{ secrets.FIREBASE_KEY }}' > firebase-key.json
+          
+          # Verify it was created (debug only)
+          ls -la firebase-key.json
+          head -n 2 firebase-key.json  # Shows first 2 lines (confirms format)
+
+      - name: Run Python Script
+        run: |
+          python app.py
