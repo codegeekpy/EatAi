@@ -13,5 +13,10 @@
         "en": {"Andhra": "Andhra", "Telangana": "Telangana"},
         "te": {"Andhra": "ఆంధ్ర", "Telangana": "తెలంగాణ"},
         "hi": {"Andhra": "आंध्र", "Telangana": "तेलंगाना"}
+    },
+    "recipes":{
+         "en": "Recipe",
+        "te": "వంటకం",
+        "hi": "व्यंजन विधि"
     }
 }
