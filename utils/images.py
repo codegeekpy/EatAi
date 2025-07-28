@@ -1,21 +1,37 @@
 import os
-from PIL import Image, ImageDraw
-import io
+import streamlit as st
+from PIL import Image
+import requests
+from io import BytesIO
 
-AVATAR_DIR = os.path.join(os.path.dirname(__file__), '..', 'assets', 'avatars')
-
-def get_default_avatar(username):
-    # Try local file first
-    default_path = os.path.join(AVATAR_DIR, 'default.png')
-    if os.path.exists(default_path):
-        return default_path
+def load_image(image_path=None):
+    """
+    Safely loads an image with multiple fallbacks:
+    1. Try the provided path (URL or local)
+    2. Try local placeholder
+    3. Try remote placeholder
+    4. Fallback to generated blank image
+    """
+    try:
+        # Use default if no path provided
+        if not image_path:
+            return Image.open('assets/placeholder.jpg')
+        
+        # Handle URL case
+        if image_path.startswith(('http://', 'https://')):
+            response = requests.get(image_path, timeout=5)
+            return Image.open(BytesIO(response.content))
+        
+        # Handle local file case
+        if os.path.exists(image_path):
+            return Image.open(image_path)
+            
+    except Exception:
+        pass
     
-    # Fallback to generated avatar
-    img = Image.new('RGB', (150, 150), color=(240, 240, 240))
-    draw = ImageDraw.Draw(img)
-    draw.text((75, 75), username[0].upper(), 
-             fill=(70, 130, 180),  # Steel blue color
-             font_size=72)
-    img_byte_arr = io.BytesIO()
-    img.save(img_byte_arr, format='PNG')
-    return img_byte_arr.getvalue()
+    # Final fallbacks
+    try:
+        return Image.open('assets/error_placeholder.jpg')
+    except:
+        # Ultimate fallback - generate blank image
+        return Image.new('RGB', (800, 600), color='gray')
